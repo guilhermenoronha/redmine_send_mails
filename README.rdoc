@@ -1,0 +1,33 @@
+= Redmine Send Mails Plugin
+
+Redmine Send Mails Plugin is a plugin to control the e-mails sent by redmine and to avoid spam. 
+This control is done inside wiki pages and issues. 
+When the user change an issue or wiki page, he'll can choose whether the e-mail of his modification will be sent or not.
+To do this the user just needs to marks the checkbox "Send email?" which will be placed above the submit button.
+If he marks the checkbox the Redmine will send the email according to e-mail configuration of each user on Redmine.
+
+== Features
+
+* Issue editing e-mail control
+* Wiki page editing e-mail control
+
+== Install
+
+1. Paste the folder "redmine_send_mails" into the plugins folder
+2. Restart redmine
+
+== Uninstall
+
+1. Delete the folder "redmine_send_mails"
+2. Restart redmine
+
+== Versions
+
+Only tested on 2.0.x version
+
+== Features Changelog
+
+=== 0.0.1
+
+First Commit
+

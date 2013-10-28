@@ -1,2 +1,0 @@
-redmine-send-mails
-==================
