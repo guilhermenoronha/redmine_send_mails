@@ -32,7 +32,8 @@
 <p><font size="1"><%=l(:label_condittion_to_field_comments) %></font></p>
 <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
 </div>
-<%= l(:send_email) %> <%= check_box_tag "email_checker_wiki", 1 %> <br>
+<%@user = User.current%>
+<%= l(:send_email) %> <%= check_box_tag "email_checker_wiki", 1, @user.pref[:always_check_email] %> <br>
 <p><%= submit_tag l(:button_save) %>
    <%= link_to_remote l(:label_preview),
                        { :url => { :controller => 'wiki', :action => 'preview',

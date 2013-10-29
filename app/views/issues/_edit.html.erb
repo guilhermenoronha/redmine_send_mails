@@ -34,10 +34,10 @@
     <p><%=l(:label_attachment_plural)%><br /><%= render :partial => 'attachments/form', :locals => {:container => @issue} %></p>
     </fieldset>
     </div>
-
+	<% @user = User.current %>
     <%= f.hidden_field :lock_version %>
     <%= hidden_field_tag 'last_journal_id', params[:last_journal_id] || @issue.last_journal_id %>
-    <%= l(:send_email) %> <%= check_box_tag "mail_checker_issue", 1 %> <br>
+    <%= l(:send_email) %> <%= check_box_tag "mail_checker_issue", 1, @user.pref[:always_check_email] %> <br>
     <%= submit_tag l(:button_submit) %>
     <%= link_to_remote l(:label_preview),
                        { :url => preview_edit_issue_path(:project_id => @project, :id => @issue),

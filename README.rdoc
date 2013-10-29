@@ -27,7 +27,13 @@ Only tested on 2.0.x version
 
 == Features Changelog
 
+=== 0.0.2
+
+* Added user preference for maintain the checkbox always marked.
+* Added E-mail control for Bulk Edit Issues.
+* Added E-mail control for New issues. 
+
 === 0.0.1
 
-First Commit
+* First Commit
 

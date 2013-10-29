@@ -8,6 +8,7 @@ module MailerControlPatch
 
     base.class_eval do
       alias_method_chain :issue_edit, :send_mail_control
+      alias_method_chain :issue_add, :send_mail_control
       alias_method_chain :wiki_content_updated, :send_mail_control
     end
   end
@@ -40,6 +41,26 @@ module InstanceMethods
     mail :to => recipients,
         :cc => cc,
         :subject => s
+  end
+  
+    def issue_add_with_send_mail_control(issue)
+    redmine_headers 'Project' => issue.project.identifier,
+                    'Issue-Id' => issue.id,
+                    'Issue-Author' => issue.author.login
+    redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
+    message_id issue
+    @author = issue.author
+    @issue = issue
+    @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
+    recipients = issue.recipients
+    cc = issue.watcher_recipients - recipients
+    if @issue.get_mail_checker_issue.nil?
+      recipients = []
+      cc = []
+    end    
+    mail :to => recipients,
+      :cc => cc,
+      :subject => "[#{issue.project.name} - #{issue.tracker.name} ##{issue.id}] (#{issue.status.name}) #{issue.subject}"
   end
 
   def wiki_content_updated_with_send_mail_control(wiki_content)
