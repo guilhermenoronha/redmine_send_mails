@@ -20,16 +20,5 @@
   <p><em class="info"><%= l(:text_user_mail_option) %></em></p>
 <% end %>
 
-<%= fields_for :pref, @user.pref do |pref_fields| %>
-<p>
-  <%= pref_fields.check_box :no_self_notified %>
-  <label for="pref_no_self_notified"><%= l(:label_user_mail_no_self_notified) %></label>
-  
-  <!-- plugin modification -->
-  <br>
-  <%= pref_fields.check_box :always_check_email %>
-  <label for="always_send_email"><%= l(:always_send_email) %></label>
-  <!-- end -->
-  
-</p>
-<% end %>
+<p><label><%= check_box_tag 'no_self_notified', 1, @user.pref[:no_self_notified] %><%= l(:label_user_mail_no_self_notified) %></label></p>
+<p><label><%= check_box_tag 'always_check_email', 1, @user.pref[:always_check_email] %><%= l(:always_send_email) %> </label> </p>

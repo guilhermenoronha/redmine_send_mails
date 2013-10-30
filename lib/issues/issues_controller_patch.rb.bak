@@ -20,15 +20,17 @@ module InstanceMethods
     @issue.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     saved = false
     begin
-      # plugin modification
       @issue.set_mail_checker_issue(params[:mail_checker_issue])
-      #end
       saved = @issue.save_issue_with_child_records(params, @time_entry)
     rescue ActiveRecord::StaleObjectError
       @conflict = true
       if params[:last_journal_id]
-        @conflict_journals = @issue.journals_after(params[:last_journal_id]).all
-        @conflict_journals.reject!(&:private_notes?) unless User.current.allowed_to?(:view_private_notes, @issue.project)
+        if params[:last_journal_id].present?
+          last_journal_id = params[:last_journal_id].to_i
+          @conflict_journals = @issue.journals.all(:conditions => ["#{Journal.table_name}.id > ?", last_journal_id])
+        else
+          @conflict_journals = @issue.journals.all
+        end
       end
     end
 
@@ -37,8 +39,8 @@ module InstanceMethods
       flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
 
       respond_to do |format|
-        format.html { redirect_back_or_default issue_path(@issue) }
-        format.api  { render_api_ok }
+        format.html { redirect_back_or_default({:action => 'show', :id => @issue}) }
+        format.api  { head :ok }
       end
     else
       respond_to do |format|
@@ -121,6 +123,8 @@ module InstanceMethods
       redirect_back_or_default _project_issues_path(@project)
     end
   end
+
+
 
 end
 
