@@ -20,17 +20,15 @@ module InstanceMethods
     @issue.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     saved = false
     begin
+      # plugin modification
       @issue.set_mail_checker_issue(params[:mail_checker_issue])
+      #end
       saved = @issue.save_issue_with_child_records(params, @time_entry)
     rescue ActiveRecord::StaleObjectError
       @conflict = true
       if params[:last_journal_id]
-        if params[:last_journal_id].present?
-          last_journal_id = params[:last_journal_id].to_i
-          @conflict_journals = @issue.journals.all(:conditions => ["#{Journal.table_name}.id > ?", last_journal_id])
-        else
-          @conflict_journals = @issue.journals.all
-        end
+        @conflict_journals = @issue.journals_after(params[:last_journal_id]).all
+        @conflict_journals.reject!(&:private_notes?) unless User.current.allowed_to?(:view_private_notes, @issue.project)
       end
     end
 
@@ -39,8 +37,8 @@ module InstanceMethods
       flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
 
       respond_to do |format|
-        format.html { redirect_back_or_default({:action => 'show', :id => @issue}) }
-        format.api  { head :ok }
+        format.html { redirect_back_or_default issue_path(@issue) }
+        format.api  { render_api_ok }
       end
     else
       respond_to do |format|
@@ -59,9 +57,13 @@ module InstanceMethods
       respond_to do |format|
         format.html {
           render_attachment_warning_if_needed(@issue)
-          flash[:notice] = l(:notice_issue_successful_create, :id => "<a href='#{issue_path(@issue)}'>##{@issue.id}</a>")
-          redirect_to(params[:continue] ?  { :action => 'new', :project_id => @issue.project, :issue => {:tracker_id => @issue.tracker, :parent_issue_id => @issue.parent_issue_id}.reject {|k,v| v.nil?} } :
-                      { :action => 'show', :id => @issue })
+          flash[:notice] = l(:notice_issue_successful_create, :id => view_context.link_to("##{@issue.id}", issue_path(@issue), :title => @issue.subject))
+          if params[:continue]
+            attrs = {:tracker_id => @issue.tracker, :parent_issue_id => @issue.parent_issue_id}.reject {|k,v| v.nil?}
+            redirect_to new_project_issue_path(@issue.project, :issue => attrs)
+          else
+            redirect_to issue_path(@issue)
+          end
         }
         format.api  { render :action => 'show', :status => :created, :location => issue_url(@issue) }
       end
@@ -81,10 +83,20 @@ module InstanceMethods
 
     unsaved_issue_ids = []
     moved_issues = []
+
+    if @copy && params[:copy_subtasks].present?
+      # Descendant issues will be copied with the parent task
+      # Don't copy them twice
+      @issues.reject! {|issue| @issues.detect {|other| issue.is_descendant_of?(other)}}
+    end
+
     @issues.each do |issue|
       issue.reload
       if @copy
-        issue = issue.copy({}, :attachments => params[:copy_attachments].present?)
+        issue = issue.copy({},
+          :attachments => params[:copy_attachments].present?,
+          :subtasks => params[:copy_subtasks].present?
+        )
       end
       journal = issue.init_journal(User.current, params[:notes])
       issue.safe_attributes = attributes
@@ -101,15 +113,14 @@ module InstanceMethods
 
     if params[:follow]
       if @issues.size == 1 && moved_issues.size == 1
-        redirect_to :controller => 'issues', :action => 'show', :id => moved_issues.first
+        redirect_to issue_path(moved_issues.first)
       elsif moved_issues.map(&:project).uniq.size == 1
-        redirect_to :controller => 'issues', :action => 'index', :project_id => moved_issues.map(&:project).first
+        redirect_to project_issues_path(moved_issues.map(&:project).first)
       end
     else
-      redirect_back_or_default({:controller => 'issues', :action => 'index', :project_id => @project})
+      redirect_back_or_default _project_issues_path(@project)
     end
   end
-
 
 end
 

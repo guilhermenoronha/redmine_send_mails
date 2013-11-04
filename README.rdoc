@@ -27,6 +27,10 @@ Only tested on 2.0.x version
 
 == Features Changelog
 
+=== 0.2.23x
+
+* Adapted to work on Redmine 2.3.x
+
 === 0.0.2
 
 * Added user preference for maintain the checkbox always marked.
