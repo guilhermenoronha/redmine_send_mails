@@ -26,18 +26,18 @@
   <!-- plugin modification -->
   <% if Redmine::VERSION.to_a[0..2].join.to_i < 232 %>
 	  <label>
-	  <%= check_box_tag 'no_self_notified', 1, @user.pref[:no_self_notified] %><%= l(:label_user_mail_no_self_notified) %>
+	  <%= check_box_tag 'pref_no_self_notified', 1, @user.pref[:no_self_notified] %><%= l(:label_user_mail_no_self_notified) %>
 	  </label>
   <% end %>
   
   <% if Redmine::VERSION.to_a[0..2].join.to_i >= 232 %>
 	  <%= pref_fields.check_box :no_self_notified %>
-	  <label for="no_self_notified"><%= l(:label_user_mail_no_self_notified) %></label>  		
+	  <label for='pref_no_self_notified'><%= l(:label_user_mail_no_self_notified) %></label>  		
   <% end %>
 
   <br>
   <%= pref_fields.check_box :always_check_email %>
-  <label for="always_send_email"><%= l(:always_send_email) %></label>
+  <label for='pref_always_check_email'><%= l(:always_send_email) %></label>
   <!-- end -->
   
 </p>
