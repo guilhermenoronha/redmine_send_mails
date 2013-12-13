@@ -1,0 +1,4 @@
+<% @user = User.current %>
+<div class="splitcontent">
+<p><label for="mail_checker_issue"><%= t(:send_email) %></label><%= check_box_tag "mail_checker_issue", 1, @user.pref.always_check_email %></p>
+</div>

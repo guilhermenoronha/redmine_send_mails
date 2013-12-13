@@ -33,7 +33,7 @@
 </div>
 <!-- plugin modification -->
 <%@user = User.current%>
-<%= l(:send_email) %> <%= check_box_tag "email_checker_wiki", 1, @user.pref.always_check_email %> <br>
+<label><%= l(:send_email) %> <%= check_box_tag "email_checker_wiki", 1, @user.pref.always_check_email %></label> <br>
 <!-- end -->
 <p><%= submit_tag l(:button_save) %>
    <%= preview_link({:controller => 'wiki', :action => 'preview', :project_id => @project, :id => @page.title }, 'wiki_form') %></p>

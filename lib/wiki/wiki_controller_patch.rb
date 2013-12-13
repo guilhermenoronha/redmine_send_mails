@@ -39,7 +39,7 @@ module InstanceMethods
     end
     @content.author = User.current
     #plugin modification MODIFICATION
-    @content.set_mail_checker_wiki(params[:email_checker_wiki])
+    @content.mail_checker_wiki = params[:email_checker_wiki]
     #END
   if @page.save_with_content
       attachments = Attachment.attach_files(@page, params[:attachments])

@@ -35,7 +35,7 @@ module InstanceMethods
     @journal = journal
     @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue, :anchor => "change-#{journal.id}")
     # plugin modification
-    if @issue.get_mail_checker_issue.nil?
+    if @issue.mail_checker_issue.nil?
       recipients = []
       cc = []
     end
@@ -57,7 +57,7 @@ module InstanceMethods
     recipients = issue.recipients
     cc = issue.watcher_recipients - recipients
     # plugin modification
-    if @issue.get_mail_checker_issue.nil?
+    if @issue.mail_checker_issue.nil?
       recipients = []
       cc = []
     end
@@ -82,7 +82,7 @@ module InstanceMethods
                                    :project_id => wiki_content.project, :id => wiki_content.page.title,
                                    :version => wiki_content.version)
     # plugin modification
-    if @wiki_content.get_mail_checker_wiki.nil?
+    if @wiki_content.mail_checker_wiki.nil?
       recipients = []
       cc = []
     end

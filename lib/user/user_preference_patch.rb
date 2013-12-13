@@ -10,7 +10,6 @@ module InstanceMethods
 
   def always_check_email; (self[:always_check_email] == true || self[:always_check_email] == '1'); end
   def always_check_email=(value); self[:always_check_email]=value; end
-  
 
   #BUG FIX FOR VERSIONS BEFORE 2.3.2 
   if Redmine::VERSION.to_a[0..2].join.to_i < 232

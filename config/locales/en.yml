@@ -1,4 +1,4 @@
 # English strings go here for Rails i18n
 en:
-  send_email: "Send email?"
+  send_email: "I want to send e-mail"
   always_send_email: "Always check the checkbox for send e-mail"

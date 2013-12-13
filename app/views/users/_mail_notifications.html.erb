@@ -21,7 +21,6 @@
 <% end %>
 
 <%= fields_for :pref, @user.pref do |pref_fields| %>
-
 <p>
   <!-- plugin modification -->
   <% if Redmine::VERSION.to_a[0..2].join.to_i < 232 %>

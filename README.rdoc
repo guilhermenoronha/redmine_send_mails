@@ -27,6 +27,11 @@ Only tested on 2.0.x version
 
 == Features Changelog
 
+=== 0.3.23xBeta
+
+* Code partialy rewrite using Hooks on Issues page.
+* Bug fixed: label fields connected with checkbox tag wich became easily to click.
+
 === 0.2.23x
 
 * Adapted to work on Redmine 2.3.x
