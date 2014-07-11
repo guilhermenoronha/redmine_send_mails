@@ -70,7 +70,6 @@ module InstanceMethods
   end
 
   def wiki_content_updated_with_send_mail_control(wiki_content)
-    Rails.logger.error "start"
     redmine_headers 'Project' => wiki_content.project.identifier,
                     'Wiki-Page-Id' => wiki_content.page.id
     @author = wiki_content.author
@@ -91,11 +90,9 @@ module InstanceMethods
     end
     #end
     
-    Rails.logger.error "end"
     mail :to => recipients,
       :cc => cc,
       :subject => "[#{wiki_content.project.name}] #{l(:mail_subject_wiki_content_updated, :id => wiki_content.page.pretty_title)}"
-    Rails.logger.error "end2"
   end
   
 
